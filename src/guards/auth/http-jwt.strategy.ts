@@ -21,7 +21,7 @@ export class HttpJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     async validate(payload: Payload): Promise<Payload> {
-        const isExist: boolean = await this.userService.isUserExist(payload.account)
+        const isExist: boolean = await this.userService.isIdExist(payload._id)
         if (!isExist) throw new BadRequestException('用户不存在')
         return payload
     }
