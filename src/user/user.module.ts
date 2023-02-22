@@ -1,26 +1,17 @@
 import { Module } from '@nestjs/common'
 import { DbModule } from '@/db/db.module'
-import { JwtModule as JWT } from '@nestjs/jwt'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@/config/config.module'
+import { EmailModule } from '@/email/email.module'
 import { HttpJwtStrategy } from '@/guards/auth/http-jwt.strategy'
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
-
-const JwtModule = JWT.registerAsync({
-    imports: [ConfigModule],
-    inject: [ConfigService],
-    useFactory(configService: ConfigService) {
-        return {
-            secret: configService.get('SecretKey'),
-            signOptions: { expiresIn: '7d' }
-        }
-    }
-})
+import { JwtModule } from '@/jwt/jwt.module'
 
 @Module({
-    imports: [DbModule, JwtModule, ConfigModule.forRoot()],
+    imports: [DbModule, JwtModule, ConfigModule, EmailModule],
     controllers: [UserController],
-    providers: [UserService, HttpJwtStrategy]
+    providers: [UserService, HttpJwtStrategy],
+    exports: [UserService]
 })
 
 export class UserModule { }

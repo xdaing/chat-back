@@ -1,14 +1,32 @@
-import { IsString, Length, IsNotEmpty } from 'class-validator'
-export class CreateUserDto {
+import { IsString, Length, IsNotEmpty, IsEmail, IsArray } from 'class-validator'
 
+export class UserLogin {
+
+    @IsEmail()
     @IsString()
     @IsNotEmpty()
-    @Length(14, 20)
-    account: string
+    readonly email: string
 
     @IsString()
     @IsNotEmpty()
     @Length(6, 12)
-    password: string
+    readonly password: string
+
 }
-export class UserLoginDto extends CreateUserDto { }
+
+export class UserRegister extends UserLogin {
+
+    @IsString()
+    @IsNotEmpty()
+    @Length(6, 6)
+    readonly code: string
+
+}
+
+export class ApplicationData {
+
+    @IsNotEmpty()
+    @IsArray()
+    @IsString({ each: true })
+    readonly applications: Array<string>
+}
